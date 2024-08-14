@@ -1,0 +1,11 @@
+node_modules/
+
+main.js
+
+**/*.js
+*.js
+
+**/*.mjs
+*.mjs
+
+dist/*

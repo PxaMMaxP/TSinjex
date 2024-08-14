@@ -1,0 +1,9 @@
+# Internal
+.vscode
+.locale
+.VSCodeCounter
+
+*.ignore.*
+
+dist/*
+node_modules/*
