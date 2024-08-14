@@ -97,12 +97,12 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               shell: bash
 
-            - name: Delete temporary branch
-              id: delete_temp_branch
-              run: |
-                  git checkout main
-                  git branch -D temp_branch
-              shell: bash
+            # - name: Delete temporary branch
+            #   id: delete_temp_branch
+            #   run: |
+            #       git checkout main
+            #       git branch -D temp_branch
+            #   shell: bash
 
             - name: Release
               uses: softprops/action-gh-release@v2
