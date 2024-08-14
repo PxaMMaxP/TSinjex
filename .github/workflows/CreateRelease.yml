@@ -72,7 +72,16 @@ jobs:
                   echo "$notes" >> release_notes.md
               shell: bash
 
-            - name: Create Tag
+            - name: Create temporary branch
+              id: create_temp_branch
+              run: |
+                  git checkout --orphan temp_branch
+                  git reset --hard
+                  git add README.md package.json LICENSE dist/**
+                  git commit -m "Prepare files for release ${env.VERSION}"
+              shell: bash
+
+            - name: Create and push tag
               id: create_tag
               run: |
                   git tag ${{ env.VERSION }}
@@ -81,17 +90,18 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               shell: bash
 
+            - name: Delete temporary branch
+              id: delete_temp_branch
+              run: |
+                  git checkout main
+                  git branch -D temp_branch
+              shell: bash
+
             - name: Release
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ env.VERSION }}
                   name: Release ${{ env.VERSION }}
                   body_path: release_notes.md
-                  # files: |
-                  #     ./dist/**
-                  #     ./README.md
-                  #     ./LICENSE
-                  #     ./package.json
-                  #     ./tsconfig.json
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

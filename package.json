@@ -1,9 +1,10 @@
 {
   "name": "ts-injex",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build:tsc": "tsc",
     "lint": "eslint --ext .ts .",
