@@ -87,11 +87,11 @@ jobs:
                   tag_name: ${{ env.VERSION }}
                   name: Release ${{ env.VERSION }}
                   body_path: release_notes.md
-                  files: |
-                      ./dist/**
-                      ./README.md
-                      ./LICENSE
-                      ./package.json
-                      ./tsconfig.json
+                  # files: |
+                  #     ./dist/**
+                  #     ./README.md
+                  #     ./LICENSE
+                  #     ./package.json
+                  #     ./tsconfig.json
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
