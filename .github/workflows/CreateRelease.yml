@@ -56,7 +56,7 @@ jobs:
               run: |
                   if [ "${{ env.VERSION }}" == "${{ env.PREVIOUS_TAG }}" ]; then
                     echo "Version has not changed. No release will be created."
-                    exit 0
+                    exit 1
                   fi
               shell: bash
 
