@@ -72,6 +72,12 @@ jobs:
                   echo "$notes" >> release_notes.md
               shell: bash
 
+            - name: Set Git user
+              run: |
+                  git config --local user.name "GitHub Actions"
+                  git config --local user.email "actions@github.com"
+              shell: bash
+
             - name: Create temporary branch
               id: create_temp_branch
               run: |
