@@ -1,4 +1,4 @@
-import { TSInjex } from 'src/TSInjex';
+import { TSInjex } from '../TSInjex';
 
 /**
  * Register a dependency.
