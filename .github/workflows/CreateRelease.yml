@@ -76,9 +76,10 @@ jobs:
               id: create_temp_branch
               run: |
                   git checkout --orphan temp_branch
-                  git reset --hard
+                  git rm -rf .
+                  git reset -- README.md package.json LICENSE dist/**
                   git add README.md package.json LICENSE dist/**
-                  git commit -m "Prepare files for release ${env.VERSION}"
+                  git commit -m "Prepare files for release ${{ env.VERSION }}"
               shell: bash
 
             - name: Create and push tag
