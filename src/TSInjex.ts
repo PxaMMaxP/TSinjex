@@ -1,27 +1,13 @@
 import { ImplementsStatic } from './helper/ImplementsStatic';
-import { ITSInjex, ITSInjex_ } from './interfaces/IDIContainer';
+import { IDependency } from './interfaces/IDependency';
+import { ITSInjex, ITSInjex_ } from './interfaces/ITSInjex';
 
 /**
- * Dependency Entry Interface
- */
-interface IDependency {
-    /**
-     * The dependency itself
-     */
-    dependency: unknown;
-    /**
-     * If true, the dependency is deprecated => a warning
-     * is logged when the dependency is resolved
-     */
-    deprecated?: boolean;
-}
-
-/**
- * Dependency Injection Container
+ * **TSInjex**: Dependency Injection Container
  */
 @ImplementsStatic<ITSInjex_>()
-export class DIContainer implements ITSInjex {
-    private static _instance: DIContainer;
+export class TSInjex implements ITSInjex {
+    private static _instance: TSInjex;
     private readonly _dependencies = new Map<string, IDependency>();
 
     /**
@@ -37,10 +23,39 @@ export class DIContainer implements ITSInjex {
      */
     public static getInstance(): ITSInjex {
         if (this._instance == null) {
-            this._instance = new DIContainer();
+            this._instance = new TSInjex();
         }
 
         return this._instance;
+    }
+
+    /**
+     * @inheritdoc
+     * @see {@link ITSInjexRegister.register}
+     */
+    public static register<T>(
+        identifier: string,
+        dependency: T,
+        deprecated = false,
+    ): void {
+        (TSInjex.getInstance() as TSInjex)._dependencies.set(identifier, {
+            dependency: dependency,
+            deprecated: deprecated,
+        });
+    }
+
+    /**
+     * @inheritdoc
+     * @see {@link ITSInjexResolve.resolve}
+     */
+    public static resolve<T>(
+        identifier: string,
+        necessary = true,
+    ): T | undefined {
+        return (TSInjex.getInstance() as TSInjex).resolve<T>(
+            identifier,
+            necessary,
+        );
     }
 
     //#endregion
@@ -48,11 +63,7 @@ export class DIContainer implements ITSInjex {
     //#region IDIContainer
 
     /**
-     * Register a dependency
-     * @param identifier The identifier of the dependency
-     * @param dependency The dependency to register
-     * @param deprecated If true, the dependency is deprecated => a warning
-     * is logged when the dependency is resolved
+     * @inheritdoc
      */
     public register<T>(
         identifier: string,
@@ -66,11 +77,7 @@ export class DIContainer implements ITSInjex {
     }
 
     /**
-     * Resolve a dependency
-     * @param identifier The identifier of the dependency
-     * @param necessary If true, throws an error if the dependency is not found
-     * @returns The resolved dependency or undefined if the dependency is not found (if necessary is false)
-     * @throws Error if the dependency is not found (if necessary is true)
+     * @inheritdoc
      */
     public resolve<T>(identifier: string, necessary = true): T | undefined {
         const dependency = this._dependencies.get(identifier);

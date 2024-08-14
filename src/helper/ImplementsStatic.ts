@@ -3,5 +3,5 @@
  * @returns A decorator function
  */
 export function ImplementsStatic<I>() {
-  return <T extends I>(constructor: T, ...args: unknown[]) => {};
+    return <T extends I>(constructor: T, ...args: unknown[]) => {};
 }

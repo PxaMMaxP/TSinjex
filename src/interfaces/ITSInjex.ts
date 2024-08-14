@@ -1,17 +1,17 @@
 /**
- * Static Dependency Injection Container Interface
+ * Static TSInjex Interface
  */
-export interface ITSInjex_ {
+export interface ITSInjex_ extends ITSInjexRegister, ITSInjexResolve {
     /**
-     * Get the **singleton** Dependency Injection Container
+     * Get the **singleton** TSInjex instance.
      */
     getInstance(): ITSInjex;
 }
 
 /**
- * Dependency Injection Container Interface
+ * Register method for static and instance Dependency Injection Container.
  */
-export interface ITSInjex {
+export interface ITSInjexRegister {
     /**
      * Register a dependency.
      * @param identifier The identifier of the dependency.
@@ -34,7 +34,12 @@ export interface ITSInjex {
      * @param deprecated No warning is logged when the dependency is resolved.
      */
     register<T>(identifier: string, dependency: T, deprecated?: false): void;
+}
 
+/**
+ * Resolve method for static and instance Dependency Injection Container.
+ */
+export interface ITSInjexResolve {
     /**
      * Resolve a dependency
      * @param identifier The identifier of the dependency
@@ -58,3 +63,8 @@ export interface ITSInjex {
      */
     resolve<T>(identifier: string, necessary?: false): T | undefined;
 }
+
+/**
+ * TSInjex Interface
+ */
+export interface ITSInjex extends ITSInjexRegister, ITSInjexResolve {}

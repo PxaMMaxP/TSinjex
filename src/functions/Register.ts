@@ -1,11 +1,11 @@
-import { DIContainer } from 'src/DIContainer';
+import { TSInjex } from 'src/TSInjex';
 
 /**
  * Register a dependency.
  * @param identifier The identifier of the dependency.
  * @param dependency The dependency to register.
  */
-export function Register<T>(identifier: string, dependency: T): void;
+export function register<T>(identifier: string, dependency: T): void;
 
 /**
  * Register a dependency.
@@ -13,7 +13,7 @@ export function Register<T>(identifier: string, dependency: T): void;
  * @param dependency The dependency to register.
  * @param deprecated A warning is logged when the dependency is resolved.
  */
-export function Register<T>(
+export function register<T>(
     identifier: string,
     dependency: T,
     deprecated?: true,
@@ -26,10 +26,10 @@ export function Register<T>(
  * @param deprecated If true, the dependency is deprecated => a warning
  * is logged when the dependency is resolved.
  */
-export function Register<T>(
+export function register<T>(
     identifier: string,
     dependency: T,
     deprecated?: boolean,
 ): void {
-    DIContainer.getInstance().register(identifier, dependency, deprecated);
+    TSInjex.getInstance().register(identifier, dependency, deprecated);
 }

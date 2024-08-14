@@ -1,4 +1,4 @@
-import { ITSInjex } from './IDIContainer';
+import { ITSInjex } from './ITSInjex';
 
 /**
  * General error class for {@link ITSInjex} interface.
