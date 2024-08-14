@@ -84,7 +84,7 @@ jobs:
                   git checkout --orphan temp_branch
                   git reset
                   rm -f .gitignore
-                  git add README.md package.json LICENSE dist/
+                  git add README.md package.json LICENSE dist/ src/ tsconfig.json
                   git commit -m "Prepare files for release ${{ env.VERSION }}"
               shell: bash
 
@@ -97,18 +97,12 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               shell: bash
 
-            # - name: Delete temporary branch
-            #   id: delete_temp_branch
-            #   run: |
-            #       git checkout main
-            #       git branch -D temp_branch
-            #   shell: bash
-
             - name: Release
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ env.VERSION }}
                   name: Release ${{ env.VERSION }}
                   body_path: release_notes.md
+                  prerelease: true
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

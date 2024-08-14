@@ -1,6 +1,6 @@
 {
   "name": "ts-injex",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -36,5 +36,12 @@
   "dependencies": {
     "eslint-plugin-prettier": "^5.2.1",
     "jest-environment-jsdom": "^29.7.0"
-  }
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ]
 }
