@@ -1,11 +1,11 @@
-import { ITSInjex } from './ITSInjex';
+import { ITSinjex } from './ITSinjex';
 
 /**
- * General error class for {@link ITSInjex} interface.
+ * General error class for {@link ITSinjex} interface.
  */
-export class TSInjexError extends Error {
+export class TSinjexError extends Error {
     /**
-     * Creates a new instance of {@link TSInjexError}
+     * Creates a new instance of {@link TSinjexError}
      * @param message **The error message**
      */
     constructor(message: string) {
@@ -15,10 +15,10 @@ export class TSInjexError extends Error {
 }
 
 /**
- * Error class for dependency resolution errors in {@link ITSInjex}.
- * @see {@link ITSInjex.resolve}
+ * Error class for dependency resolution errors in {@link ITSinjex}.
+ * @see {@link ITSinjex.resolve}
  */
-export class DependencyResolutionError extends TSInjexError {
+export class DependencyResolutionError extends TSinjexError {
     /**
      * Creates a new instance of {@link DependencyResolutionError}
      * @param identifier **The identifier of the dependency**

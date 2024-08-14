@@ -1,4 +1,4 @@
 import { test_IDIContainer } from './IDIContainer.spec';
-import { TSInjex } from '../TSInjex';
+import { TSinjex } from '../TSinjex';
 
-test_IDIContainer(TSInjex);
+test_IDIContainer(TSinjex);

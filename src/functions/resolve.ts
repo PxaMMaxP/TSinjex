@@ -1,5 +1,5 @@
 import { DependencyResolutionError } from '../interfaces/Exceptions';
-import { TSInjex } from '../TSInjex';
+import { TSinjex } from '../TSinjex';
 
 /**
  * Resolve a dependency.
@@ -29,5 +29,5 @@ export function resolve<T>(
     identifier: string,
     necessary?: boolean,
 ): T | undefined {
-    return TSInjex.getInstance().resolve<T>(identifier, necessary);
+    return TSinjex.getInstance().resolve<T>(identifier, necessary);
 }

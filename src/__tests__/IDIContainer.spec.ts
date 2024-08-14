@@ -1,13 +1,13 @@
-import { ITSInjex_, ITSInjex } from '../interfaces/ITSInjex';
+import { ITSinjex_, ITSinjex } from '../interfaces/ITSinjex';
 
 /**
  * Test the implementation of a DIContainer
  * @param Container The DIContainer implementation to test.
- * Must implement {@link ITSInjex}, {@link ITSInjex_}
+ * Must implement {@link ITSinjex}, {@link ITSinjex_}
  */
-export function test_IDIContainer(Container: ITSInjex_): void {
+export function test_IDIContainer(Container: ITSinjex_): void {
     describe('IDIContainer Implementation Tests', () => {
-        let container: ITSInjex;
+        let container: ITSinjex;
 
         beforeEach(() => {
             container = Container.getInstance();

@@ -1,4 +1,4 @@
-import { TSInjex } from '../TSInjex';
+import { TSinjex } from '../TSinjex';
 import { InitDelegate } from '../types/InitDelegate';
 
 /**
@@ -28,7 +28,7 @@ export function RegisterInstance<
 ) {
     return function (constructor: TargetType, ...args: unknown[]): void {
         // Get the instance of the DI container
-        const diContainer = TSInjex.getInstance();
+        const diContainer = TSinjex.getInstance();
 
         // Create a proxy to instantiate the class when needed (Lazy Initialization)
         let lazyProxy: unknown = new Proxy(

@@ -1,4 +1,4 @@
-import { TSInjex } from '../TSInjex';
+import { TSinjex } from '../TSinjex';
 
 /**
  * Register a dependency.
@@ -31,5 +31,5 @@ export function register<T>(
     dependency: T,
     deprecated?: boolean,
 ): void {
-    TSInjex.getInstance().register(identifier, dependency, deprecated);
+    TSinjex.getInstance().register(identifier, dependency, deprecated);
 }

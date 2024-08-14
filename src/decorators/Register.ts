@@ -1,4 +1,4 @@
-import { TSInjex } from '../TSInjex';
+import { TSinjex } from '../TSinjex';
 
 /**
  * A decorator to register a class in the DI (Dependency Injection) container.
@@ -20,7 +20,7 @@ export function Register<
 >(identifier: string, deprecated?: boolean) {
     return function (constructor: TargetType, ...args: unknown[]): void {
         // Get the instance of the DI container
-        const diContainer = TSInjex.getInstance();
+        const diContainer = TSinjex.getInstance();
 
         // Register the class in the DI container
         diContainer.register(identifier, constructor, deprecated);
