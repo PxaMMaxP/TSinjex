@@ -1,4 +1,4 @@
-import { DIContainer } from '../DIContainer';
+import { TSInjex } from '../TSInjex';
 import { InitDelegate } from '../types/InitDelegate';
 
 /**
@@ -12,7 +12,7 @@ import { InitDelegate } from '../types/InitDelegate';
  * - If `true`, an error will be thrown if the dependency cannot be resolved.
  * - If `false`, `undefined` will be returned if the dependency cannot be resolved.
  * @returns A decorator function to be applied on the class property.
- * @see {@link DIContainer}
+ * @see {@link TSInjex}
  * @example
  * ```ts
  * class MyClass {
@@ -37,7 +37,7 @@ export function Inject<T, U>(
         // Unique symbol to store the private property
         const privatePropertyKey: unique symbol = Symbol();
         // Get the DI container instance
-        const diContainer = DIContainer.getInstance();
+        const diContainer = TSInjex.getInstance();
 
         // Function to evaluate the dependency lazily
         // to avoid circular dependencies, not found dependencies, etc.

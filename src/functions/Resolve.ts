@@ -1,5 +1,5 @@
-import { DIContainer } from '../DIContainer';
 import { DependencyResolutionError } from '../interfaces/Exceptions';
+import { TSInjex } from '../TSInjex';
 
 /**
  * Resolve a dependency.
@@ -7,7 +7,7 @@ import { DependencyResolutionError } from '../interfaces/Exceptions';
  * @returns The resolved dependency.
  * @throws A {@link DependencyResolutionError} if the dependency is not found.
  */
-export function Resolve<T>(identifier: string): T;
+export function resolve<T>(identifier: string): T;
 
 /**
  * Resolve a dependency
@@ -15,7 +15,7 @@ export function Resolve<T>(identifier: string): T;
  * @param necessary The dependency is **not** necessary.
  * @returns The resolved dependency or undefined if the dependency is not found.
  */
-export function Resolve<T>(identifier: string, necessary: false): T | undefined;
+export function resolve<T>(identifier: string, necessary: false): T | undefined;
 
 /**
  * Resolve a dependency.
@@ -25,9 +25,9 @@ export function Resolve<T>(identifier: string, necessary: false): T | undefined;
  * and not found, or throws an error if the dependency is necessary and not found.
  * @throws A {@link DependencyResolutionError} if the dependency is not found and necessary.
  */
-export function Resolve<T>(
+export function resolve<T>(
     identifier: string,
     necessary?: boolean,
 ): T | undefined {
-    return DIContainer.getInstance().resolve<T>(identifier, necessary);
+    return TSInjex.getInstance().resolve<T>(identifier, necessary);
 }
