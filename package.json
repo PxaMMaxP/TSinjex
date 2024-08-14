@@ -11,8 +11,7 @@
     "lint:fix": "eslint --fix --ext .ts .",
     "test:file": "jest --watch --onlyChanged --coverage=true --verbose",
     "test:verbose": "jest --verbose",
-    "version:show": "node -e \"console.log(require('./package.json').version)\"",
-    "postinstall": "npm run build:tsc"
+    "version:show": "node -e \"console.log(require('./package.json').version)\""
   },
   "repository": {
     "type": "git",
