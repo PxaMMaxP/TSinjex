@@ -81,7 +81,7 @@ jobs:
             - name: Create temporary branch
               id: create_temp_branch
               run: |
-                  git checkout --orphan temp_branch
+                  git checkout --orphan release/v${{ env.VERSION }}
                   git reset
                   rm -f .gitignore
                   git add README.md package.json LICENSE dist/ src/ tsconfig.json
