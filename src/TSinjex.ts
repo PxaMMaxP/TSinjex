@@ -1,4 +1,5 @@
 import { ImplementsStatic } from './helper/ImplementsStatic';
+import { DependencyResolutionError } from './interfaces/Exceptions';
 import { IDependency } from './interfaces/IDependency';
 import { ITSinjex, ITSinjex_ } from './interfaces/ITSinjex';
 
@@ -31,7 +32,7 @@ export class TSinjex implements ITSinjex {
 
     /**
      * @inheritdoc
-     * @see {@link ITSInjexRegister.register}
+     * @see {@link ITSinjex.register}
      */
     public static register<T>(
         identifier: string,
@@ -46,7 +47,7 @@ export class TSinjex implements ITSinjex {
 
     /**
      * @inheritdoc
-     * @see {@link ITSInjexResolve.resolve}
+     * @see {@link ITSinjex.resolve}
      */
     public static resolve<T>(
         identifier: string,
@@ -83,7 +84,7 @@ export class TSinjex implements ITSinjex {
         const dependency = this._dependencies.get(identifier);
 
         if (necessary && !dependency) {
-            throw new Error(`Dependency ${identifier} not found`);
+            throw new DependencyResolutionError(identifier);
         } else if (!dependency) {
             return undefined;
         }

@@ -1,8 +1,10 @@
+# TSinjex
 
+## Configuration
 
-## Jest
+### Jest
 
-### Example jest setup
+#### Example jest setup
 
 ```ts
 module.exports = {

@@ -1,5 +1,6 @@
 /**
- * Decorator to enforce static implementation of an interface
+ * Decorator to enforce static implementation of an interface.
+ * Warns on compile time if the interface is not implemented.
  * @returns A decorator function
  */
 export function ImplementsStatic<I>() {

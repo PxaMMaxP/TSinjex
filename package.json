@@ -1,6 +1,6 @@
 {
   "name": "ts-injex",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,7 +11,8 @@
     "lint:fix": "eslint --fix --ext .ts .",
     "test:file": "jest --watch --onlyChanged --coverage=true --verbose",
     "test:verbose": "jest --verbose",
-    "version:show": "node -e \"console.log(require('./package.json').version)\""
+    "version:show": "node -e \"console.log(require('./package.json').version)\"",
+    "docs": "typedoc"
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,8 @@
     "eslint-plugin-jsdoc": "^50.2.2",
     "eslint-plugin-override": "https://github.com/PxaMMaxP/eslint-plugin-override",
     "jest": "^29.7.0",
-    "ts-jest": "^29.2.3"
+    "ts-jest": "^29.2.3",
+    "typedoc": "^0.26.5"
   },
   "dependencies": {
     "eslint-plugin-prettier": "^5.2.1",
