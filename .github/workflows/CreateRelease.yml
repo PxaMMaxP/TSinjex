@@ -94,11 +94,22 @@ jobs:
               id: create_temp_branch
               if: steps.check_version.outputs.skip_release == 'false'
               run: |
-                  git checkout release --no-checkout
-                  git reset
-                  rm -f .gitignore
+                  # Stash current changes (optional, only if you have unstaged changes you want to keep)
+                  git stash
+
+                  # Checkout the release branch
+                  git checkout release
+
+                  # Apply stashed changes (if you stashed earlier)
+                  git stash pop || true
+
+                  # Add new/modified files
                   git add README.md package.json LICENSE dist/ src/ tsconfig.json
+
+                  # Commit the changes
                   git commit -m "Prepare files for release ${{ env.VERSION }}"
+
+                  # Push the changes to the release branch
                   git push origin release
               shell: bash
 
