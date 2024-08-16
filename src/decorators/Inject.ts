@@ -1,18 +1,19 @@
-import { TSinjex } from '../TSinjex';
+import { Identifier } from 'src/types/Identifier';
+import { TSinjex } from '../classes/TSinjex';
 import { InitDelegate } from '../types/InitDelegate';
 
 /**
- * A decorator to inject a dependency from a DI (Dependency Injection) container.
- * The dependency is lazily evaluated when the property is accessed for the first time.
- * This can help avoid issues like circular dependencies and not-found dependencies.
- * @template ClassType The type of the property to be injected.
- * @param identifier The identifier used to resolve the dependency from the DI container.
+ * A decorator to inject a dependency from a DI (Dependency Injection) container into a class property.
+ * @template T The type of the dependency to be injected.
+ * @template U The type of the property to be injected.
+ * @param identifier The identifier used to resolve the class in the DI container.
+ * @see {@link Identifier} for more information on identifiers.
  * @param init An optional initializer function to transform the dependency before injection.
- * @param necessary Indicates if the dependency is necessary.
- * - If `true`, an error will be thrown if the dependency cannot be resolved.
- * - If `false`, `undefined` will be returned if the dependency cannot be resolved.
- * @returns A decorator function to be applied on the class property.
- * @see {@link TSinjex}
+ * @see {@link InitDelegate} for more information on initializer functions.
+ * @param necessary If true, throws an error if the dependency is not found.
+ * @returns The resolved dependency or undefined if the dependency is not necessary
+ * and not found, or throws an error if the dependency is necessary and not found.
+ * @throws A {@link DependencyResolutionError} if the dependency is not found and necessary.
  * @example
  * ```ts
  * class MyClass {
@@ -29,7 +30,7 @@ import { InitDelegate } from '../types/InitDelegate';
  * ```
  */
 export function Inject<T, U>(
-    identifier: string,
+    identifier: Identifier,
     init?: InitDelegate<T, U>,
     necessary = true,
 ) {

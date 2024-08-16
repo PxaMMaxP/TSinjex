@@ -10,7 +10,7 @@ export class TSinjexError extends Error {
      */
     constructor(message: string) {
         super(message);
-        this.name = 'TSInjex';
+        this.name = 'TSinjex';
     }
 }
 
@@ -24,7 +24,7 @@ export class DependencyResolutionError extends TSinjexError {
      * @param identifier **The identifier of the dependency**
      */
     constructor(identifier: string) {
-        super(`Dependency ${identifier} not found.`);
-        this.name = 'TSInjexResolutionError';
+        super(`Dependency ${identifier} could not be resolved.`);
+        this.name = 'TSinjexResolutionError';
     }
 }

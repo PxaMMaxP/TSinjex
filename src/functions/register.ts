@@ -1,33 +1,37 @@
-import { TSinjex } from '../TSinjex';
+import { Identifier } from 'src/types/Identifier';
+import { TSinjex } from '../classes/TSinjex';
 
 /**
  * Register a dependency.
- * @param identifier The identifier of the dependency.
+ * @param identifier The identifier used to register the class in the DI container.
+ * @see {@link Identifier} for more information on identifiers..
  * @param dependency The dependency to register.
  */
-export function register<T>(identifier: string, dependency: T): void;
+export function register<T>(identifier: Identifier, dependency: T): void;
 
 /**
  * Register a dependency.
- * @param identifier The identifier of the dependency.
+ * @param identifier The identifier used to register the class in the DI container.
+ * @see {@link Identifier} for more information on identifiers.
  * @param dependency The dependency to register.
  * @param deprecated A warning is logged when the dependency is resolved.
  */
 export function register<T>(
-    identifier: string,
+    identifier: Identifier,
     dependency: T,
     deprecated?: true,
 ): void;
 
 /**
  * Register a dependency.
- * @param identifier The identifier of the dependency.
+ * @param identifier The identifier used to register the class in the DI container.
+ * @see {@link Identifier} for more information on identifiers.
  * @param dependency The dependency to register.
  * @param deprecated If true, the dependency is deprecated => a warning
  * is logged when the dependency is resolved.
  */
 export function register<T>(
-    identifier: string,
+    identifier: Identifier,
     dependency: T,
     deprecated?: boolean,
 ): void {
