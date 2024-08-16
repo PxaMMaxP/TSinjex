@@ -57,15 +57,16 @@ jobs:
                   # Check if the version already exists as a tag
                   if git rev-parse "refs/tags/${{ env.VERSION }}" >/dev/null 2>&1; then
                     echo "Version ${{ env.VERSION }} already exists as a tag. No release will be created."
-                    exit 0
+                    exit 1
                   fi
 
                   # Compare current version with previous tag
                   if [ "${{ env.VERSION }}" == "${{ env.PREVIOUS_TAG }}" ]; then
                     echo "Version has not changed. No release will be created."
-                    exit 0
+                    exit 1
                   fi
               shell: bash
+              continue-on-error: true
 
             - name: Generate release notes
               id: generate_notes
