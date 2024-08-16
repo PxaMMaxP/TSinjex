@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const coverageDir = path.join(__dirname, '..', '.locale', 'coverage');
-const typedocUrl = 'https://pxammaxp.github.io/TSinjex/';
+const typedocUrl = '../../';
 
 const getAllFiles = (dir, files = []) => {
     fs.readdirSync(dir).forEach(file => {
