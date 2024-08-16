@@ -57,19 +57,22 @@ jobs:
                   # Check if the version already exists as a tag
                   if git rev-parse "refs/tags/${{ env.VERSION }}" >/dev/null 2>&1; then
                     echo "Version ${{ env.VERSION }} already exists as a tag. No release will be created."
-                    exit 1
+                    echo "::set-output name=skip_release::true"
+                    exit 0
                   fi
 
                   # Compare current version with previous tag
                   if [ "${{ env.VERSION }}" == "${{ env.PREVIOUS_TAG }}" ]; then
                     echo "Version has not changed. No release will be created."
-                    exit 1
+                    echo "::set-output name=skip_release::true"
+                    exit 0
                   fi
+                  echo "::set-output name=skip_release::false"
               shell: bash
-              continue-on-error: true
 
             - name: Generate release notes
               id: generate_notes
+              if: steps.check_version.outputs.skip_release == 'false'
               run: |
                   echo "Generating release notes from ${{ env.PREVIOUS_TAG }} to HEAD..."
                   repo_url=$(git config --get remote.origin.url)
@@ -81,6 +84,7 @@ jobs:
               shell: bash
 
             - name: Set Git user
+              if: steps.check_version.outputs.skip_release == 'false'
               run: |
                   git config --local user.name "GitHub Actions"
                   git config --local user.email "actions@github.com"
@@ -88,6 +92,7 @@ jobs:
 
             - name: Create temporary branch
               id: create_temp_branch
+              if: steps.check_version.outputs.skip_release == 'false'
               run: |
                   git checkout --orphan release/v${{ env.VERSION }}
                   git reset
@@ -98,6 +103,7 @@ jobs:
 
             - name: Create and push tag
               id: create_tag
+              if: steps.check_version.outputs.skip_release == 'false'
               run: |
                   git tag ${{ env.VERSION }}
                   git push origin ${{ env.VERSION }}
@@ -106,6 +112,7 @@ jobs:
               shell: bash
 
             - name: Release
+              if: steps.check_version.outputs.skip_release == 'false'
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ env.VERSION }}
