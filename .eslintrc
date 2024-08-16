@@ -53,7 +53,7 @@
         "no-prototype-builtins": "off",
         "@typescript-eslint/no-empty-function": "off",
         "deprecation/deprecation": "warn",
-        "no-console": "error",
+        "no-console": "off",
         "@typescript-eslint/naming-convention": [
             "warn",
             {
