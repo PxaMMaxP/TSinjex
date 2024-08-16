@@ -31,18 +31,19 @@ export function RegisterInstance<
     return function (constructor: TargetType, ...args: unknown[]): void {
         // Get the instance of the DI container
         const diContainer = TSinjex.getInstance();
+        let instance: InstanceType<TargetType>;
 
         // Create a proxy to instantiate the class when needed (Lazy Initialization)
         let lazyProxy: unknown = new Proxy(
             {},
             {
                 get(target, prop, receiver) {
-                    let instance: InstanceType<TargetType>;
-
-                    if (init) {
-                        instance = init(constructor);
-                    } else {
-                        instance = new constructor(...args);
+                    if (instance == null) {
+                        if (init) {
+                            instance = init(constructor);
+                        } else {
+                            instance = new constructor(...args);
+                        }
                     }
                     lazyProxy = instance;
 
@@ -50,12 +51,12 @@ export function RegisterInstance<
                     return instance[prop as keyof InstanceType<TargetType>];
                 },
                 set(target, prop, value, receiver) {
-                    let instance: InstanceType<TargetType>;
-
-                    if (init) {
-                        instance = init(constructor);
-                    } else {
-                        instance = new constructor(...args);
+                    if (instance == null) {
+                        if (init) {
+                            instance = init(constructor);
+                        } else {
+                            instance = new constructor(...args);
+                        }
                     }
                     lazyProxy = instance;
 
