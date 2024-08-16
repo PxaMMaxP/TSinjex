@@ -1,3 +1,16 @@
+### Project Time
+
+![Time](https://waka.mpassarello.de/api/badge/MaxP/interval:any/project:TSinjex?label=Project%20time)
+
+### Test Coverage
+
+[Coverage Report..](https://pxammaxp.github.io/TSinjex/coverage/lcov-report/index.html)
+
+| Statements                  | Branches                | Functions                 | Lines             |
+| --------------------------- | ----------------------- | ------------------------- | ----------------- |
+| ![Statements](https://pxammaxp.github.io/TSinjex/coverage/badges/badge-statements.svg) | ![Branches](https://pxammaxp.github.io/TSinjex/coverage/badges/badge-branches.svg) | ![Functions](https://pxammaxp.github.io/TSinjex/coverage/badges/badge-functions.svg) | ![Lines](https://pxammaxp.github.io/TSinjex/coverage/badges/badge-lines.svg) |
+
+
 # TSinjex
 
 ## Configuration
