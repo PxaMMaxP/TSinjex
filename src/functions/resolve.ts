@@ -1,6 +1,6 @@
-import { Identifier } from 'src/types/Identifier';
 import { TSinjex } from '../classes/TSinjex';
 import { DependencyResolutionError } from '../interfaces/Exceptions';
+import { Identifier } from '../types/Identifier';
 
 /**
  * Resolve a dependency.

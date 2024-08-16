@@ -1,5 +1,5 @@
-import { Identifier } from 'src/types/Identifier';
 import { TSinjex } from '../classes/TSinjex';
+import { Identifier } from '../types/Identifier';
 
 /**
  * A decorator to register a class in the **TSinjex** DI (Dependency Injection) container.

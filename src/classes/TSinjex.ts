@@ -1,4 +1,3 @@
-import { Identifier } from 'src/types/Identifier';
 import type { Inject } from '../decorators/Inject';
 import type { Register } from '../decorators/Register';
 import type { RegisterInstance } from '../decorators/RegisterInstance';
@@ -8,6 +7,7 @@ import { ImplementsStatic } from '../helper/ImplementsStatic';
 import { DependencyResolutionError } from '../interfaces/Exceptions';
 import { IDependency } from '../interfaces/IDependency';
 import { ITSinjex, ITSinjex_ } from '../interfaces/ITSinjex';
+import { Identifier } from '../types/Identifier';
 
 /**
  * # TSinjex
