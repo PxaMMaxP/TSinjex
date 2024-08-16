@@ -90,16 +90,37 @@ jobs:
                   git config --local user.email "actions@github.com"
               shell: bash
 
-            - name: Create temporary branch
-              id: create_temp_branch
+            - name: Create release commit in the release branch
+              id: create_release_commit
               if: steps.check_version.outputs.skip_release == 'false'
               run: |
-                  git checkout release
-                  git reset
-                  rm -f .gitignore
+                  # Create a temporary directory to save the files
+                  temp_dir=$(mktemp -d)
+
+                  # Copy the files to the temporary directory
+                  cp -R README.md package.json LICENSE dist/ src/ tsconfig.json $temp_dir/
+
+                  # Checkout the release branch (or create it if it doesn't exist)
+                  git fetch origin
+                  git checkout -b release origin/release || git checkout --orphan release
+
+                  # Remove all files from the working directory
+                  git rm -rf .
+
+                  # Move the files back from the temporary directory
+                  cp -R $temp_dir/* .
+
+                  # Clean up the temporary directory
+                  rm -rf $temp_dir
+
+                  # Add the files to the release branch
                   git add README.md package.json LICENSE dist/ src/ tsconfig.json
+
+                  # Commit the changes
                   git commit -m "Prepare files for release ${{ env.VERSION }}"
-                  git push origin release
+
+                  # Push the changes to the release branch
+                  git push -u origin release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               shell: bash
