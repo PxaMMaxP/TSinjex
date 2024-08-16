@@ -54,9 +54,16 @@ jobs:
             - name: Check if version changed
               id: check_version
               run: |
+                  # Check if the version already exists as a tag
+                  if git rev-parse "refs/tags/${{ env.VERSION }}" >/dev/null 2>&1; then
+                    echo "Version ${{ env.VERSION }} already exists as a tag. No release will be created."
+                    exit 0
+                  fi
+
+                  # Compare current version with previous tag
                   if [ "${{ env.VERSION }}" == "${{ env.PREVIOUS_TAG }}" ]; then
                     echo "Version has not changed. No release will be created."
-                    exit 1
+                    exit 0
                   fi
               shell: bash
 
