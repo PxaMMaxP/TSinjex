@@ -94,11 +94,12 @@ jobs:
               id: create_temp_branch
               if: steps.check_version.outputs.skip_release == 'false'
               run: |
-                  git checkout --orphan release/v${{ env.VERSION }}
+                  git checkout release --no-checkout
                   git reset
                   rm -f .gitignore
                   git add README.md package.json LICENSE dist/ src/ tsconfig.json
                   git commit -m "Prepare files for release ${{ env.VERSION }}"
+                  git push origin release
               shell: bash
 
             - name: Create and push tag
