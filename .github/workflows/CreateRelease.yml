@@ -90,16 +90,16 @@ jobs:
                   git config --local user.email "actions@github.com"
               shell: bash
 
-            - name: Create temporary branch
-              id: create_temp_branch
-              if: steps.check_version.outputs.skip_release == 'false'
-              run: |
-                  git checkout --orphan release/v${{ env.VERSION }}
-                  git reset
-                  rm -f .gitignore
-                  git add README.md package.json LICENSE dist/ src/ tsconfig.json
-                  git commit -m "Prepare files for release ${{ env.VERSION }}"
-              shell: bash
+            # - name: Create temporary branch
+            #   id: create_temp_branch
+            #   if: steps.check_version.outputs.skip_release == 'false'
+            #   run: |
+            #       git checkout --orphan release/v${{ env.VERSION }}
+            #       git reset
+            #       rm -f .gitignore
+            #       git add README.md package.json LICENSE dist/ src/ tsconfig.json
+            #       git commit -m "Prepare files for release ${{ env.VERSION }}"
+            #   shell: bash
 
             - name: Create and push tag
               id: create_tag
