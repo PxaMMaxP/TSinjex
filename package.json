@@ -6,14 +6,21 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "npm run build:tsc",
     "build:tsc": "tsc",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --fix --ext .ts .",
+    "test": "jest",
     "test:file": "jest --watch --onlyChanged --coverage=true --verbose",
     "test:verbose": "jest --verbose",
-    "test:coverage": "jest --config jest.config.coverage.cjs --coverage || true && node scripts/fix-coverage-paths.cjs && node scripts/generate-badge.cjs",
-    "version:show": "node -e \"console.log(require('./package.json').version)\"",
-    "docs": "typedoc"
+    "test:coverage": "jest --config jest.config.coverage.cjs --coverage",
+    "docs": "typedoc",
+    "docs:generate": "npm run docs && npm run docs:generate:coverage && npm run docs:fix:coverage && npm run docs:generate:badge && npm run docs:fix:escape",
+    "docs:generate:coverage": "npm run test:coverage || exit 0",
+    "docs:fix:coverage": "node scripts/fix-coverage-paths.cjs",
+    "docs:generate:badge": "node scripts/generate-badge.cjs",
+    "docs:fix:escape": "node scripts/replace-doc-escaping.cjs",
+    "version:show": "node -e \"console.log(require('./package.json').version)\""
   },
   "repository": {
     "type": "git",

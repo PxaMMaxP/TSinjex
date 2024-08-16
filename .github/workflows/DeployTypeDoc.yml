@@ -24,12 +24,8 @@ jobs:
             - name: Install Dependencies
               run: npm install
 
-            - name: Run Tests and Generate Coverage
-              run: |
-                  npm run test:coverage || echo "Ignoring test failures"
-
-            - name: Run TypeDoc
-              run: npx typedoc
+            - name: Run TypeDoc Generation (TypeDoc, Test Coverage, fixes and badges)
+              run: npm run docs:generate
 
             - name: Deploy to GitHub Pages
               env:
