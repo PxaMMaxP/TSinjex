@@ -94,6 +94,10 @@ jobs:
               id: create_temp_branch
               if: steps.check_version.outputs.skip_release == 'false'
               run: |
+                  # Checkout the release branch
+                  git checkout release
+
+                  # Remove unwanted files
                   rm -rf .gitignore package-lock.json
 
                   # Add new/modified files
@@ -101,9 +105,6 @@ jobs:
 
                   # Commit the changes
                   git commit -m "Prepare files for release ${{ env.VERSION }}"
-
-                  # Checkout the release branch
-                  git checkout release
 
                   # Push the changes to the release branch
                   git push origin release
