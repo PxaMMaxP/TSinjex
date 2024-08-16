@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 // Main
 export * from './classes/TSinjex';
 
