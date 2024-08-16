@@ -11,6 +11,7 @@
     "lint:fix": "eslint --fix --ext .ts .",
     "test:file": "jest --watch --onlyChanged --coverage=true --verbose",
     "test:verbose": "jest --verbose",
+    "test:coverage": "jest --config jest.config.coverage.cjs --coverage || true && node scripts/fix-coverage-paths.cjs && node scripts/generate-badge.cjs",
     "version:show": "node -e \"console.log(require('./package.json').version)\"",
     "docs": "typedoc"
   },
@@ -34,7 +35,9 @@
     "eslint-plugin-override": "https://github.com/PxaMMaxP/eslint-plugin-override",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.3",
-    "typedoc": "^0.26.5"
+    "typedoc": "^0.26.5",
+    "istanbul-badges-readme": "^1.9.0",
+    "axios": "^1.7.2"
   },
   "dependencies": {
     "eslint-plugin-prettier": "^5.2.1",
