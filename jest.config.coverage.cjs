@@ -15,14 +15,16 @@ module.exports = {
         'src/**/*.{ts,tsx}',
         '!src/**/*.d.ts',
         '!src/**/*.performance.test.ts',
+        '!src/**/*.spec.ts',
+        '!src/**/*.test.ts',
         '!src/auto-imports.ts'
     ],
     coverageThreshold: {
         global: {
-            branches: 70,
-            functions: 70,
-            lines: 70,
-            statements: 70,
+            branches: 90,
+            functions: 90,
+            lines: 90,
+            statements: 90,
         },
     },
 };

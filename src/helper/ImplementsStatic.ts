@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * Decorator to enforce static implementation of an interface.
  * Warns on compile time if the interface is not implemented.
