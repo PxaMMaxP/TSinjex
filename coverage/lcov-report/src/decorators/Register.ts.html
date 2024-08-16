@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/interfaces/Exceptions.ts</title>
+    <title>Code coverage report for src/decorators/Register.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="./index.html">src/interfaces</a> Exceptions.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="./index.html">src/decorators</a> Register.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -91,21 +91,7 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -113,45 +99,53 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ITSinjex } from './ITSinjex';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { TSinjex } from '../TSinjex';</span>
 &nbsp;
 /**
- * General error class for {@link ITSinjex} interface.
+ * A decorator to register a class in the DI (Dependency Injection) container.
+ * @template TargetType The type of the class to be registered.
+ * @param identifier The identifier used to register the class in the DI container.
+ * @param deprecated If true, the dependency is deprecated =&gt; a warning
+ * is logged when the dependency is resolved.
+ * @returns A function that is applied as a decorator to the class.
+ * @example
+ * ```ts
+ * \@Register('MyClassIdentifier')
+ * class MyClass {
+ *   // ...
+ * }
+ * ```
  */
-export class TSinjexError extends Error {
-    /**
-     * Creates a new instance of {@link TSinjexError}
-     * @param message **The error message**
-     */
-    constructor(message: string) {
-        super(message);
-        this.name = 'TSInjex';
-    }
-}
+<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >R</span>egister&lt;</span>
+    TargetType extends new (...args: unknown[]) =&gt; InstanceType&lt;TargetType&gt;,
+&gt;(identifier: string, deprecated?: boolean) {
+<span class="cstat-no" title="statement not covered" >    return <span class="fstat-no" title="function not covered" >function (c</span>onstructor: TargetType, ...args: unknown[]): void {</span>
+        // Get the instance of the DI container
+        const diContainer = <span class="cstat-no" title="statement not covered" >TSinjex.getInstance();</span>
 &nbsp;
-/**
- * Error class for dependency resolution errors in {@link ITSinjex}.
- * @see {@link ITSinjex.resolve}
- */
-export class DependencyResolutionError extends TSinjexError {
-    /**
-     * Creates a new instance of {@link DependencyResolutionError}
-     * @param identifier **The identifier of the dependency**
-     */
-    constructor(identifier: string) {
-        super(`Dependency ${identifier} not found.`);
-        this.name = 'TSInjexResolutionError';
-    }
+        // Register the class in the DI container
+<span class="cstat-no" title="statement not covered" >        diContainer.register(identifier, constructor, deprecated);</span>
+    };
 }
 &nbsp;</pre></td></tr></table></pre>
 
