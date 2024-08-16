@@ -94,17 +94,19 @@ jobs:
               id: create_temp_branch
               if: steps.check_version.outputs.skip_release == 'false'
               run: |
-                  # Checkout the release branch
-                  git checkout release
-
                   # Add new/modified files
                   git add README.md package.json LICENSE dist/ src/ tsconfig.json
 
                   # Commit the changes
                   git commit -m "Prepare files for release ${{ env.VERSION }}"
 
+                  # Checkout the release branch
+                  git checkout release
+
                   # Push the changes to the release branch
                   git push origin release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               shell: bash
 
             - name: Create and push tag
