@@ -1,5 +1,5 @@
 // Main
-export * from './TSinjex';
+export * from './classes/TSinjex';
 
 // Decorators
 export * from './decorators/Inject';

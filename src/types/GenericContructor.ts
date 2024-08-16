@@ -1,5 +1,6 @@
 /**
  * Generic constructor type.
+ * This type is used to define a constructor of a class.
  */
 export type GenericConstructor<
     T extends abstract new (...args: unknown[]) => InstanceType<T>,
@@ -7,6 +8,6 @@ export type GenericConstructor<
 
 /**
  * Force generic constructor type.
- * This type is used to force a class to be a constructor.
+ * This type is used to force a class to has a constructor.
  */
 export type ForceConstructor<T> = new (...args: unknown[]) => T;
