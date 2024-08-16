@@ -94,29 +94,12 @@ jobs:
               id: create_temp_branch
               if: steps.check_version.outputs.skip_release == 'false'
               run: |
-                  # Create a temporary branch to commit the changes
-                  git checkout -b temp-release-branch
-
-                  # Remove unwanted files
-                  rm -rf .gitignore package-lock.json
-
-                  # Add new/modified files
-                  git add README.md package.json LICENSE dist/ src/ tsconfig.json
-
-                  # Commit the changes
-                  git commit -m "Prepare files for release ${{ env.VERSION }}"
-
-                  # Checkout the release branch
                   git checkout release
-
-                  # Merge the changes from the temporary branch into the release branch
-                  git merge --no-ff temp-release-branch
-
-                  # Push the changes to the release branch
+                  git reset
+                  rm -f .gitignore
+                  git add README.md package.json LICENSE dist/ src/ tsconfig.json
+                  git commit -m "Prepare files for release ${{ env.VERSION }}"
                   git push origin release
-
-                  # Delete the temporary branch
-                  git branch -d temp-release-branch
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               shell: bash
