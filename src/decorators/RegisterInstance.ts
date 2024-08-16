@@ -1,5 +1,5 @@
-import { Identifier } from 'src/types/Identifier';
 import { TSinjex } from '../classes/TSinjex';
+import { Identifier } from '../types/Identifier';
 import { InitDelegate } from '../types/InitDelegate';
 
 /**
