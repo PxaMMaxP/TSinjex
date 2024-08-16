@@ -94,7 +94,7 @@ jobs:
               id: create_temp_branch
               if: steps.check_version.outputs.skip_release == 'false'
               run: |
-                  rm -rf .gitignore
+                  rm -rf .gitignore package-lock.json
 
                   # Add new/modified files
                   git add README.md package.json LICENSE dist/ src/ tsconfig.json
