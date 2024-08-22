@@ -24,6 +24,7 @@ import { InitDelegate } from '../types/InitDelegate';
  * @throws A {@link DependencyResolutionError} if the dependency is not found.
  * @throws A {@link InjectorError} if an error occurs during the injection process.
  * @throws A {@link NoInstantiationMethodError} if the dependency does not have a constructor.
+ * @throws An {@link InitializationError} if an error occurs during the initialization process.
  * @example
  * ```ts
  * class MyClass {
@@ -45,83 +46,59 @@ export function Inject<T, U>(
     necessary = true,
 ) {
     return function (target: unknown, propertyKey: string | symbol): void {
-        // Unique symbol to store the private property
-        const privatePropertyKey: unique symbol = Symbol();
-        // Get the DI container instance
-        const diContainer = TSinjex.getInstance();
-
-        // Function to evaluate the dependency lazily
-        // to avoid circular dependencies, not found dependencies, etc.
-        const evaluate = (): T | undefined => {
-            return diContainer.resolve<T>(identifier, necessary);
+        /**
+         * Function to evaluate the dependency lazily
+         * to avoid circular dependencies, not found dependencies, etc.
+         * @returns The resolved dependency or undefined if the dependency is not found.
+         */
+        const resolve = (): T | undefined => {
+            return TSinjex.getInstance().resolve<T>(identifier, necessary);
         };
 
-        // Define the property
         Object.defineProperty(target, propertyKey, {
             get() {
-                // If the property is not defined, evaluate the dependency
-                if (!this.hasOwnProperty(privatePropertyKey)) {
-                    if (init != null) {
-                        try {
-                            const dependency = evaluate();
+                let instance: T | U | undefined;
 
-                            if (dependency != null) {
-                                if (typeof init === 'function') {
-                                    try {
-                                        this[privatePropertyKey] =
-                                            init(dependency);
-                                    } catch (error) {
-                                        if (necessary)
-                                            throw new InitializationError(
-                                                identifier,
-                                                error,
-                                            );
-                                    }
-                                } else if (
-                                    init === true &&
-                                    hasConstructor(dependency)
-                                ) {
-                                    this[privatePropertyKey] = new dependency();
-                                } else
-                                    throw new NoInstantiationMethodError(
-                                        identifier,
-                                    );
-                            } else if (necessary) {
-                                throw new DependencyResolutionError(identifier);
-                            }
-                        } catch (error) {
-                            if (necessary) {
-                                if (
-                                    !(
-                                        error instanceof
-                                        NoInstantiationMethodError
-                                    ) &&
-                                    !(
-                                        error instanceof
-                                        DependencyResolutionError
-                                    )
-                                )
-                                    throw new InjectorError(identifier, error);
-                                else throw error;
-                            }
-                        }
-                    } else {
-                        this[privatePropertyKey] = evaluate();
-                    }
-                }
+                const dependency: T | undefined = tryAndCatch(
+                    () => resolve(),
+                    necessary,
+                    identifier,
+                    DependencyResolutionError,
+                );
+
+                if (dependency != null) {
+                    const initFunction: (() => U) | undefined =
+                        typeof init === 'function' && dependency != null
+                            ? (): U => init(dependency)
+                            : init === true && hasConstructor(dependency)
+                              ? (): U => new dependency() as U
+                              : undefined;
+
+                    if (init == null) instance = dependency;
+                    else if (initFunction != null)
+                        instance = tryAndCatch(
+                            initFunction,
+                            necessary,
+                            identifier,
+                            InitializationError,
+                        );
+                    else if (necessary)
+                        throw new NoInstantiationMethodError(identifier);
+                } else if (necessary)
+                    throw new DependencyResolutionError(identifier);
 
                 /**
                  * Replace itself with the resolved dependency
                  * for performance reasons.
                  */
                 Object.defineProperty(this, propertyKey, {
-                    value: this[privatePropertyKey],
+                    value: instance,
                     writable: false,
                     enumerable: false,
                     configurable: false,
                 });
 
-                return this[privatePropertyKey];
+                return instance;
             },
             /**
              * Make the property configurable to allow replacing it
@@ -129,6 +106,34 @@ export function Inject<T, U>(
             configurable: true,
         });
     };
+}
+
+/**
+ * Tries to execute a function and catches any errors that occur.
+ * If the function is necessary and an error occurs, it throws the error
+ * with the specified error class and identifier.
+ * @param fn The function to execute.
+ * @param necessary If true, throws an error if an error occurs.
+ * @param identifier The identifier of the dependency.
+ * @param errorClass The error class to throw if an error occurs.
+ * @returns The result of the function or undefined if an error occurs and the function is not necessary.
+ */
+function tryAndCatch<ReturnType, ErrorType>(
+    fn: () => ReturnType,
+    necessary: boolean,
+    identifier?: Identifier,
+    errorClass?: ErrorType,
+): ReturnType | undefined {
+    try {
+        return fn();
+    } catch (error) {
+        if (necessary)
+            throw new (errorClass != null ? errorClass : error)(
+                identifier ?? 'not specified',
+                error,
+            );
+        else return undefined;
+    }
 }
 
 /**
