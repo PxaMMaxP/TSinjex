@@ -8,4 +8,4 @@
  * I.e. a class `ClassA` that implements the interface `IClassA` and is
  * registered as a dependent class is registered under the interface name `IClassA`.
  */
-export type Identifier = string;
+export type Identifier = string | symbol;
