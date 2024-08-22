@@ -1,3 +1,9 @@
+import {
+    DependencyResolutionError,
+    InitializationError,
+    InjectorError,
+    NoInstantiationMethodError,
+} from 'src/interfaces/Exceptions';
 import { TSinjex } from '../classes/TSinjex';
 import { Identifier } from '../types/Identifier';
 import { InitDelegate } from '../types/InitDelegate';
@@ -8,12 +14,16 @@ import { InitDelegate } from '../types/InitDelegate';
  * @template U The type of the property to be injected.
  * @param identifier The identifier used to resolve the class in the DI container.
  * @see {@link Identifier} for more information on identifiers.
- * @param init An optional initializer function to transform the dependency before injection.
+ * @param init Optional an initializer function to transform the dependency before injection
+ * or true to instantiate the dependency if it has a constructor.
  * @see {@link InitDelegate} for more information on initializer functions.
  * @param necessary If true, throws an error if the dependency is not found.
  * @returns The resolved dependency or undefined if the dependency is not necessary
  * and not found, or throws an error if the dependency is necessary and not found.
- * @throws A {@link DependencyResolutionError} if the dependency is not found and necessary.
+ * @throws **Only throws errors if the dependency is necessary.**
+ * @throws A {@link DependencyResolutionError} if the dependency is not found.
+ * @throws A {@link InjectorError} if an error occurs during the injection process.
+ * @throws A {@link NoInstantiationMethodError} if the dependency does not have a constructor.
  * @example
  * ```ts
  * class MyClass {
@@ -31,7 +41,7 @@ import { InitDelegate } from '../types/InitDelegate';
  */
 export function Inject<T, U>(
     identifier: Identifier,
-    init?: InitDelegate<T, U>,
+    init?: InitDelegate<T, U> | true,
     necessary = true,
 ) {
     return function (target: unknown, propertyKey: string | symbol): void {
@@ -51,12 +61,48 @@ export function Inject<T, U>(
             get() {
                 // If the property is not defined, evaluate the dependency
                 if (!this.hasOwnProperty(privatePropertyKey)) {
-                    if (init) {
+                    if (init != null) {
                         try {
-                            this[privatePropertyKey] = init(evaluate() as T);
+                            const dependency = evaluate();
+
+                            if (dependency != null) {
+                                if (typeof init === 'function') {
+                                    try {
+                                        this[privatePropertyKey] =
+                                            init(dependency);
+                                    } catch (error) {
+                                        if (necessary)
+                                            throw new InitializationError(
+                                                identifier,
+                                                error,
+                                            );
+                                    }
+                                } else if (
+                                    init === true &&
+                                    hasConstructor(dependency)
+                                ) {
+                                    this[privatePropertyKey] = new dependency();
+                                } else
+                                    throw new NoInstantiationMethodError(
+                                        identifier,
+                                    );
+                            } else if (necessary) {
+                                throw new DependencyResolutionError(identifier);
+                            }
                         } catch (error) {
                             if (necessary) {
-                                throw error;
+                                if (
+                                    !(
+                                        error instanceof
+                                        NoInstantiationMethodError
+                                    ) &&
+                                    !(
+                                        error instanceof
+                                        DependencyResolutionError
+                                    )
+                                )
+                                    throw new InjectorError(identifier, error);
+                                else throw error;
                             }
                         }
                     } else {
@@ -64,14 +110,37 @@ export function Inject<T, U>(
                     }
                 }
 
+                /**
+                 * Replace itself with the resolved dependency
+                 * for performance reasons.
+                 */
+                Object.defineProperty(this, propertyKey, {
+                    value: this[privatePropertyKey],
+                    writable: false,
+                    enumerable: false,
+                    configurable: false,
+                });
+
                 return this[privatePropertyKey];
             },
-            // Not necessary to set the property
-            // set(value: PropertieType) {
-            //     this[privatePropertyKey] = value;
-            // },
-            enumerable: true,
-            configurable: false,
+            /**
+             * Make the property configurable to allow replacing it
+             */
+            configurable: true,
         });
     };
+}
+
+/**
+ * Checks if an object has a constructor.
+ * @param obj The object to check.
+ * @returns True if the object has a constructor, false otherwise.
+ */
+function hasConstructor<T>(obj: T): obj is T & { new (): unknown } {
+    const _obj = obj as unknown as { prototype?: { constructor?: unknown } };
+
+    return (
+        _obj?.prototype != null &&
+        typeof _obj.prototype.constructor === 'function'
+    );
 }
