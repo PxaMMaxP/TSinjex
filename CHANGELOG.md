@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+
+### Deprecated
+
+
+### Removed
+
+
+### Fixed
+
+
+### Security
+
+
+## [0.0.14]
+
+### Added
+
 - Added **ChangeLog** file and format it according to [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added reference to **Semantic Versioning** in the changelog file. (History will be updated on time).
 - Version format is now `v0.0.0` instead of `0.0.0`. Changes to this are also reflected in the workflos.
@@ -35,4 +52,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[unreleased]: https://github.com/PxaMMaxP/TSinjex/compare/0.0.13...HEAD
+[unreleased]: https://github.com/PxaMMaxP/TSinjex/compare/0.0.14...HEAD
+[0.0.14]: https://github.com/PxaMMaxP/TSinjex/compare/0.0.13...v0.0.14
