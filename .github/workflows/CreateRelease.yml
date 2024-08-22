@@ -116,7 +116,7 @@ jobs:
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ env.VERSION }}
-                  name: Release v${{ env.VERSION }}
+                  name: Release ${{ env.VERSION }}
                   body_path: release_notes.md
                   prerelease: true
               env:
