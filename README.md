@@ -6,7 +6,13 @@
 
 ## Configuration
 
+### Identifiers
+
+Strings and symbols are possible for the **identifiers**.
+
 ### Jest
+
+For the use of TSinjex with Jest, the corresponding source files can be found under `./src` of the TSinjex node_module folder. To use these files, the `moduleNameMapper` must be configured in the Jest configuration file. The following example shows how to configure the Jest configuration file to use the source files of TSinjex.
 
 #### Example jest setup
 
