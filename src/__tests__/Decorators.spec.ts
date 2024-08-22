@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inject } from 'src/decorators/Inject';
 import { DependencyResolutionError } from 'src/interfaces/Exceptions';

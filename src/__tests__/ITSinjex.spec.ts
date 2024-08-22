@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { ITSinjex_, ITSinjex } from '../interfaces/ITSinjex';
 
 /**
