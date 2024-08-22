@@ -114,7 +114,7 @@ export class TSinjex implements ITSinjex {
         }
 
         if (dependency.deprecated) {
-            console.warn(`Dependency ${identifier} is deprecated`);
+            console.warn(`Dependency ${identifier.toString()} is deprecated`);
 
             // Remove the deprecation warning; it should only be logged once.
             dependency.deprecated = false;
