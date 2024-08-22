@@ -35,7 +35,7 @@ jobs:
               id: get_version
               run: |
                   VERSION=$(npm run version:show | tail -n 1)
-                  echo "VERSION=$VERSION" >> $GITHUB_ENV
+                  echo "VERSION=v$VERSION" >> $GITHUB_ENV
               shell: bash
 
             - name: Get previous release tag
@@ -116,7 +116,7 @@ jobs:
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ env.VERSION }}
-                  name: Release ${{ env.VERSION }}
+                  name: Release v${{ env.VERSION }}
                   body_path: release_notes.md
                   prerelease: true
               env:
