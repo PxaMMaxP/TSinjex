@@ -1,3 +1,4 @@
+import { Identifier } from 'src/types/Identifier';
 import { ITSinjex } from './ITSinjex';
 
 /**
@@ -23,8 +24,8 @@ export class DependencyResolutionError extends TSinjexError {
      * Creates a new instance of {@link DependencyResolutionError}
      * @param identifier **The identifier of the dependency**
      */
-    constructor(identifier: string) {
-        super(`Dependency ${identifier} could not be resolved.`);
+    constructor(identifier: Identifier) {
+        super(`Dependency ${identifier.toString()} could not be resolved.`);
         this.name = 'TSinjexResolutionError';
     }
 }
