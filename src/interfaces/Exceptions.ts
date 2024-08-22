@@ -29,3 +29,39 @@ export class DependencyResolutionError extends TSinjexError {
         this.name = 'TSinjexResolutionError';
     }
 }
+
+/**
+ * Error class for Injector errors in {@link ITSinjex}.
+ * @see {@link ITSinjex.inject}
+ */
+export class InjectorError extends TSinjexError {
+    /**
+     * Creates a new instance of {@link InjectorError}
+     * @param message **The error message**
+     * @param identifier **The identifier of the dependency**
+     * @param originalError **The original error that caused the injection error**
+     */
+    constructor(identifier: Identifier, originalError?: Error) {
+        super(
+            `Error injecting dependency ${identifier.toString()} with error: "${originalError}"`,
+        );
+        this.name = 'TSinjexInjectorError';
+    }
+}
+
+/**
+ * Error class for missing instantiation methods in {@link ITSinjex}.
+ * @see {@link ITSinjex.inject}
+ */
+export class NoInstantiationMethodError extends TSinjexError {
+    /**
+     * Creates a new instance of {@link NoInstantiationMethodError}
+     * @param identifier **The identifier of the dependency**
+     */
+    constructor(identifier: Identifier) {
+        super(
+            `No instantiation method found for dependency ${identifier.toString()}.`,
+        );
+        this.name = 'TSinjexNoInstantiationMethodError';
+    }
+}
