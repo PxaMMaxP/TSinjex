@@ -118,6 +118,130 @@ export function test_InjectDecorator(
             }
             expect(_error).toBeInstanceOf(DependencyResolutionError);
         });
+
+        it('should replace the property with the resolved dependency', () => {
+            container.register('MockDependencyIdentifier', {
+                value: 'test-value',
+            });
+
+            class TestClass {
+                @Inject('MockDependencyIdentifier')
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+
+                public isDependencyTypeofFunction() {
+                    return typeof this._dependency === 'function';
+                }
+            }
+
+            const instance = new TestClass();
+
+            expect(instance.getDependency().value).toBe('test-value');
+
+            expect(instance.isDependencyTypeofFunction()).toBe(false);
+            expect(instance.getDependency().value).toBe('test-value');
+        });
+
+        it('should use a empty initializer when none is provided but true', () => {
+            container.register(
+                'MockDependencyIdentifier',
+                class X {
+                    public value: string = 'test-value';
+                    constructor() {}
+                },
+            );
+
+            class TestClass {
+                @Inject('MockDependencyIdentifier', true)
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+            }
+
+            const instance = new TestClass();
+            expect(instance.getDependency().value).toBe('test-value');
+        });
+
+        it('should throw an error when the dependency has no instantiation method', () => {
+            container.register('MockDependencyIdentifier', {
+                value: 'test-value',
+            });
+
+            class TestClass {
+                @Inject('MockDependencyIdentifier', true)
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+            }
+
+            expect(() => {
+                const instance = new TestClass();
+                instance.getDependency();
+            }).toThrow(new RegExp('No instantiation method found for.*'));
+        });
+
+        it('should not throw an error when the dependency has no instantiation method if not necessary', () => {
+            container.register('MockDependencyIdentifier', {
+                value: 'test-value',
+            });
+
+            class TestClass {
+                @Inject('MockDependencyIdentifier', true, false)
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+            }
+
+            expect(() => {
+                const instance = new TestClass();
+                instance.getDependency();
+            }).not.toThrow(new RegExp('No instantiation method found for.*'));
+        });
+
+        it('should throw an error when the dependency cannot be resolved', () => {
+            container.register('MockDependencyIdentifier', null);
+
+            class TestClass {
+                @Inject('MockDependencyIdentifier', true)
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+            }
+
+            expect(() => {
+                const instance = new TestClass();
+                instance.getDependency();
+            }).toThrow(new RegExp('.*could not be resolved.*'));
+        });
+
+        it('should not throw an error when the dependency cannot be resolved if not necessary', () => {
+            container.register('MockDependencyIdentifier', null);
+
+            class TestClass {
+                @Inject('MockDependencyIdentifier', true, false)
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+            }
+
+            expect(() => {
+                const instance = new TestClass();
+                instance.getDependency();
+            }).not.toThrow(new RegExp('.*could not be resolved.*'));
+        });
     });
 }
 
