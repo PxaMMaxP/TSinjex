@@ -13,11 +13,27 @@ jobs:
             - name: Check out repository
               uses: actions/checkout@v2
 
+            - name: Read Config File
+              id: config
+              run: |
+                  VALID_PREFIXES=$(grep 'valid_prefixes' .github/config.conf | cut -d '=' -f2 | tr -d ' ')
+                  echo "VALID_PREFIXES=$VALID_PREFIXES" >> $GITHUB_ENV
+
             - name: Validate Branch Name on Pull Request
               run: |
-                  BRANCH_NAME=${GITHUB_HEAD_REF}
-                  if [[ ! "$BRANCH_NAME" =~ ^(feature\/|fix\/|refactoring\/|testing\/|dependabot\/|gh-pages) ]]; then
+                  BRANCH_NAME=${{ github.head_ref }}
+                  VALID_PREFIXES_ARRAY=(${VALID_PREFIXES//,/ })
+                  VALID=false
+
+                  for PREFIX in "${VALID_PREFIXES_ARRAY[@]}"; do
+                    if [[ "$BRANCH_NAME" =~ ^$PREFIX ]]; then
+                      VALID=true
+                      break
+                    fi
+                  done
+
+                  if [ "$VALID" = false ]; then
                     echo "Invalid branch name: $BRANCH_NAME"
-                    echo "Branch name must start with 'feature/', 'fix/', 'refactoring/', 'testing/', dependabot/" or "gh-pages"
+                    echo "Branch name must start with one of the following prefixes: $VALID_PREFIXES"
                     exit 1
                   fi
