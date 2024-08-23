@@ -9,9 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- feat: Add a full description of `Identifiers` as JSDoc comment.
-  This establishes the definition of what an `Identifiers` is.
-
 
 ### Deprecated
 
