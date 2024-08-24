@@ -16,6 +16,19 @@ export class TSinjexError extends Error {
 }
 
 /**
+ * Error class for missing identifiers in {@link ITSinjex} methods.
+ */
+export class IdentifierRequiredError extends TSinjexError {
+    /**
+     * Creates a new instance of {@link IdentifierRequiredError}
+     */
+    constructor() {
+        super('Identifier is required.');
+        this.name = 'TSinjexIdentifierRequiredError';
+    }
+}
+
+/**
  * Error class for dependency resolution errors in {@link ITSinjex}.
  * @see {@link ITSinjex.resolve}
  */
