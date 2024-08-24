@@ -1,5 +1,6 @@
 import {
     DependencyResolutionError,
+    IdentifierRequiredError,
     InitializationError,
     InjectorError,
     NoInstantiationMethodError,
@@ -10,17 +11,17 @@ import { InitDelegate } from '../types/InitDelegate';
 
 /**
  * A decorator to inject a dependency from a DI (Dependency Injection) container into a class property.
- * @template T The type of the dependency to be injected.
- * @template U The type of the property to be injected.
- * @param identifier The identifier used to resolve the class in the DI container.
- * @see {@link Identifier} for more information on identifiers.
- * @param init Optional an initializer function to transform the dependency before injection
+ * @template TargetType The type of the class to inject the dependency into.
+ * @template DependencyType The type of the dependency to be injected.
+ * @template PropertyType The type of the property to be injected.
+ * @param identifier The {@link Identifier|identifier} used to resolve the dependencie in the DI container or the property name if not provided.
+ * @param init An optional initializer {@link InitDelegate|function} to transform the dependency before injection
  * or true to instantiate the dependency if it has a constructor.
- * @see {@link InitDelegate} for more information on initializer functions.
  * @param necessary If true, throws an error if the dependency is not found.
  * @returns The resolved dependency or undefined if the dependency is not necessary
  * and not found, or throws an error if the dependency is necessary and not found.
  * @throws **Only throws errors if the dependency is necessary.**
+ * @throws An {@link IdentifierRequiredError} if the identifier is not provided and the class name is not available.
  * @throws A {@link DependencyResolutionError} if the dependency is not found.
  * @throws A {@link InjectorError} if an error occurs during the injection process.
  * @throws A {@link NoInstantiationMethodError} if the dependency does not have a constructor.
@@ -40,70 +41,86 @@ import { InitDelegate } from '../types/InitDelegate';
  * }
  * ```
  */
-export function Inject<T, U>(
-    identifier: Identifier,
-    init?: InitDelegate<T, U> | true,
+export function Inject<TargetType, DependencyType, PropertyType>(
+    identifier?: Identifier,
+    init?: InitDelegate<DependencyType, PropertyType> | true,
     necessary = true,
 ) {
-    return function (target: unknown, propertyKey: string | symbol): void {
+    return function (
+        constructor: undefined,
+        context: ClassFieldDecoratorContext<TargetType> & {
+            name: PropertyType;
+        },
+    ): void {
+        const _identifier = identifier ?? context.name;
+
+        if (_identifier == null && necessary === true)
+            throw new IdentifierRequiredError();
+
         /**
          * Function to evaluate the dependency lazily
          * to avoid circular dependencies, not found dependencies, etc.
          * @returns The resolved dependency or undefined if the dependency is not found.
          */
-        const resolve = (): T | undefined => {
-            return TSinjex.getInstance().resolve<T>(identifier, necessary);
+        const resolve = (): DependencyType | undefined => {
+            return TSinjex.getInstance().resolve<DependencyType>(
+                _identifier,
+                necessary,
+            );
         };
 
-        Object.defineProperty(target, propertyKey, {
-            get() {
-                let instance: T | U | undefined;
+        context.addInitializer(function (this: TargetType) {
+            Object.defineProperty(this, context.name, {
+                get() {
+                    let instance: DependencyType | PropertyType | undefined;
 
-                const dependency: T | undefined = tryAndCatch(
-                    () => resolve(),
-                    necessary,
-                    identifier,
-                    DependencyResolutionError,
-                );
+                    const dependency: DependencyType | undefined = tryAndCatch(
+                        () => resolve(),
+                        necessary,
+                        _identifier,
+                        DependencyResolutionError,
+                    );
 
-                if (dependency != null) {
-                    const initFunction: (() => U) | undefined =
-                        typeof init === 'function' && dependency != null
-                            ? (): U => init(dependency)
-                            : init === true && hasConstructor(dependency)
-                              ? (): U => new dependency() as U
-                              : undefined;
+                    if (dependency != null) {
+                        const initFunction: (() => PropertyType) | undefined =
+                            typeof init === 'function' && dependency != null
+                                ? (): PropertyType => init(dependency)
+                                : init === true && hasConstructor(dependency)
+                                  ? (): PropertyType =>
+                                        new dependency() as PropertyType
+                                  : undefined;
 
-                    if (init == null) instance = dependency;
-                    else if (initFunction != null)
-                        instance = tryAndCatch(
-                            initFunction,
-                            necessary,
-                            identifier,
-                            InitializationError,
-                        );
-                    else if (necessary)
-                        throw new NoInstantiationMethodError(identifier);
-                } else if (necessary)
-                    throw new DependencyResolutionError(identifier);
+                        if (init == null) instance = dependency;
+                        else if (initFunction != null)
+                            instance = tryAndCatch(
+                                initFunction,
+                                necessary,
+                                _identifier,
+                                InitializationError,
+                            );
+                        else if (necessary)
+                            throw new NoInstantiationMethodError(_identifier);
+                    } else if (necessary)
+                        throw new DependencyResolutionError(_identifier);
 
+                    /**
+                     * Replace itself with the resolved dependency
+                     * for performance reasons.
+                     */
+                    Object.defineProperty(this, context.name, {
+                        value: instance,
+                        writable: false,
+                        enumerable: false,
+                        configurable: false,
+                    });
+
+                    return instance;
+                },
                 /**
-                 * Replace itself with the resolved dependency
-                 * for performance reasons.
+                 * Make the property configurable to allow replacing it
                  */
-                Object.defineProperty(this, propertyKey, {
-                    value: instance,
-                    writable: false,
-                    enumerable: false,
-                    configurable: false,
-                });
-
-                return instance;
-            },
-            /**
-             * Make the property configurable to allow replacing it
-             */
-            configurable: true,
+                configurable: true,
+            });
         });
     };
 }
