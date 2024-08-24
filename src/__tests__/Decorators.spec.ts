@@ -67,6 +67,29 @@ export function test_InjectDecorator(
             expect(instance.getDependency().value).toBe('test-value-init');
         });
 
+        it('should inject dependency and run initializer without identifier', () => {
+            container.register('MockDependencyIdentifier', {
+                value: 'test-value',
+            });
+
+            class TestClass {
+                @Inject(undefined, (x: string) => {
+                    (x as unknown as { value: string }).value =
+                        'test-value-init';
+
+                    return x;
+                })
+                MockDependencyIdentifier!: any;
+
+                public getDependency() {
+                    return this.MockDependencyIdentifier;
+                }
+            }
+
+            const instance = new TestClass();
+            expect(instance.getDependency().value).toBe('test-value-init');
+        });
+
         it('should throw an error when necessary is true and the initializer throws an error', () => {
             let _error: Error | undefined = undefined;
 
@@ -78,7 +101,7 @@ export function test_InjectDecorator(
                 class TestClass {
                     @Inject(
                         'InitThrowDependencie',
-                        () => {
+                        (): any => {
                             throw new Error('Initializer error');
                         },
                         true,
@@ -275,6 +298,19 @@ export function test_RegisterDecorator(
                 TestClass,
             );
         });
+
+        it('should register a dependency without an identifier', () => {
+            @register()
+            class TestClass {
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+            }
+
+            expect(container.resolve('TestClass')).toBe(TestClass);
+        });
     });
 }
 
@@ -309,6 +345,23 @@ export function test_RegisterInstanceDecorator(
             expect(
                 container.resolve<TestClass>('InstanceIdentifier').mark,
             ).toBe('instance');
+        });
+
+        it('should register an instance of a dependency with an identifier', () => {
+            @registerInstance()
+            class TestClass {
+                private readonly _dependency!: any;
+
+                public getDependency() {
+                    return this._dependency;
+                }
+
+                public mark: string = 'instance';
+            }
+
+            expect(container.resolve<TestClass>('TestClass').mark).toBe(
+                'instance',
+            );
         });
 
         it('should register an instance of a dependency an run the init function', () => {
