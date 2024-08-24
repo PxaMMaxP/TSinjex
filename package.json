@@ -22,7 +22,8 @@
     "docs:fix:coverage": "node scripts/fix-coverage-paths.cjs",
     "docs:generate:badge": "node scripts/generate-badge.cjs",
     "docs:fix:escape": "node scripts/replace-doc-escaping.cjs",
-    "version:show": "node -e \"console.log(require('./package.json').version)\""
+    "version:show": "node -e \"console.log(require('./package.json').version)\"",
+    "prepare:deploy": "npm install && npm run test:verbose && npm run build:tsc"
   },
   "repository": {
     "type": "git",

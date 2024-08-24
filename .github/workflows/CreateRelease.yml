@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - main
+            - 'dev/*'
         paths:
             - 'package.json'
     workflow_dispatch: # Allows manual execution of the workflow.
@@ -22,14 +23,8 @@ jobs:
               with:
                   node-version: '20.8.0'
 
-            - name: Install Dependencies
-              run: npm install
-
-            - name: Run Tests
-              run: npm run test:verbose
-
-            - name: Build the Project
-              run: npm run build:tsc
+            - name: Install dependencies, run tests and build
+              run: npm run prepare:deploy
 
             - name: Get the version
               id: get_version
@@ -77,8 +72,9 @@ jobs:
                   echo "Generating release notes from ${{ env.PREVIOUS_TAG }} to HEAD..."
                   repo_url=$(git config --get remote.origin.url)
                   notes=$(git log ${{ env.PREVIOUS_TAG }}..HEAD --pretty=format:"- [\`%h\`]($repo_url/commit/%H): %s%n")
-                  echo "Release notes:"
+                  echo "See [CHANGELOG.md](./CHANGELOG.md) for more details."
                   echo "$notes"
+                  echo ""
                   echo "### Changes in this release" > release_notes.md
                   echo "$notes" >> release_notes.md
               shell: bash
@@ -90,17 +86,6 @@ jobs:
                   git config --local user.email "actions@github.com"
               shell: bash
 
-            # - name: Create temporary branch
-            #   id: create_temp_branch
-            #   if: steps.check_version.outputs.skip_release == 'false'
-            #   run: |
-            #       git checkout --orphan release/v${{ env.VERSION }}
-            #       git reset
-            #       rm -f .gitignore
-            #       git add README.md package.json LICENSE dist/ src/ tsconfig.json
-            #       git commit -m "Prepare files for release ${{ env.VERSION }}"
-            #   shell: bash
-
             - name: Create and push tag
               id: create_tag
               if: steps.check_version.outputs.skip_release == 'false'
@@ -111,6 +96,15 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               shell: bash
 
+            - name: Set Release Prerelease Flag
+              id: set_prerelease_flag
+              run: |
+                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+                    echo "PRE_RELEASE=false" >> $GITHUB_ENV
+                  elif [[ "${{ github.ref }}" == refs/heads/dev/* ]]; then
+                    echo "PRE_RELEASE=true" >> $GITHUB_ENV
+                  fi
+
             - name: Release
               if: steps.check_version.outputs.skip_release == 'false'
               uses: softprops/action-gh-release@v2
@@ -118,6 +112,6 @@ jobs:
                   tag_name: ${{ env.VERSION }}
                   name: Release ${{ env.VERSION }}
                   body_path: release_notes.md
-                  prerelease: true
+                  prerelease: ${{ env.PRE_RELEASE }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
