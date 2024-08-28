@@ -1,11 +1,11 @@
+import { TSinjex } from '../classes/TSinjex';
 import {
     DependencyResolutionError,
     IdentifierRequiredError,
     InitializationError,
     InjectorError,
     NoInstantiationMethodError,
-} from 'src/interfaces/Exceptions';
-import { TSinjex } from '../classes/TSinjex';
+} from '../interfaces/Exceptions';
 import { Identifier } from '../types/Identifier';
 import { InitDelegate } from '../types/InitDelegate';
 

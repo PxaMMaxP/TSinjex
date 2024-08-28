@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inject } from 'src/decorators/Inject';
-import { DependencyResolutionError } from 'src/interfaces/Exceptions';
-import { ForceConstructor } from 'src/types/GenericContructor';
+import { DependencyResolutionError } from '../interfaces/Exceptions';
 import { ITSinjex_, ITSinjex } from '../interfaces/ITSinjex';
+import { ForceConstructor } from '../types/GenericContructor';
 
 /**
  * Test the Inject decorator.

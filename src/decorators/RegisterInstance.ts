@@ -1,5 +1,5 @@
-import { IdentifierRequiredError } from 'src/interfaces/Exceptions';
 import { TSinjex } from '../classes/TSinjex';
+import { IdentifierRequiredError } from '../interfaces/Exceptions';
 import { Identifier } from '../types/Identifier';
 import { InitDelegate } from '../types/InitDelegate';
 
