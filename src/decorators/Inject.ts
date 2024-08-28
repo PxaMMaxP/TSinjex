@@ -49,7 +49,10 @@ export function Inject<TargetType, DependencyType, PropertyType>(
     return function (
         constructor: undefined,
         context: ClassFieldDecoratorContext<TargetType>,
-    ): void {
+    ): (
+        this: TargetType,
+        initialValue: PropertyType | undefined,
+    ) => PropertyType | undefined {
         const _identifier = identifier ?? context.name;
 
         if (_identifier == null && necessary === true)
@@ -67,59 +70,54 @@ export function Inject<TargetType, DependencyType, PropertyType>(
             );
         };
 
-        context.addInitializer(function (this: TargetType) {
-            Object.defineProperty(this, context.name, {
-                get() {
-                    let instance: DependencyType | PropertyType | undefined;
+        return function (
+            this: TargetType,
+            initialValue: PropertyType | undefined,
+        ): PropertyType | undefined {
+            let instance: DependencyType | PropertyType | undefined;
 
-                    const dependency: DependencyType | undefined = tryAndCatch(
-                        () => resolve(),
+            const dependency: DependencyType | undefined = tryAndCatch(
+                () => resolve(),
+                necessary,
+                _identifier,
+                DependencyResolutionError,
+            );
+
+            if (dependency != null) {
+                const initFunction: (() => PropertyType) | undefined =
+                    typeof init === 'function' && dependency != null
+                        ? (): PropertyType => init(dependency)
+                        : init === true && hasConstructor(dependency)
+                          ? (): PropertyType => new dependency() as PropertyType
+                          : undefined;
+
+                if (init == null) instance = dependency;
+                else if (initFunction != null)
+                    instance = tryAndCatch(
+                        initFunction,
                         necessary,
                         _identifier,
-                        DependencyResolutionError,
+                        InitializationError,
                     );
+                else if (necessary)
+                    throw new NoInstantiationMethodError(_identifier);
+            } else if (necessary)
+                throw new DependencyResolutionError(_identifier);
 
-                    if (dependency != null) {
-                        const initFunction: (() => PropertyType) | undefined =
-                            typeof init === 'function' && dependency != null
-                                ? (): PropertyType => init(dependency)
-                                : init === true && hasConstructor(dependency)
-                                  ? (): PropertyType =>
-                                        new dependency() as PropertyType
-                                  : undefined;
-
-                        if (init == null) instance = dependency;
-                        else if (initFunction != null)
-                            instance = tryAndCatch(
-                                initFunction,
-                                necessary,
-                                _identifier,
-                                InitializationError,
-                            );
-                        else if (necessary)
-                            throw new NoInstantiationMethodError(_identifier);
-                    } else if (necessary)
-                        throw new DependencyResolutionError(_identifier);
-
-                    /**
-                     * Replace itself with the resolved dependency
-                     * for performance reasons.
-                     */
-                    Object.defineProperty(this, context.name, {
-                        value: instance,
-                        writable: false,
-                        enumerable: false,
-                        configurable: false,
-                    });
-
-                    return instance;
-                },
-                /**
-                 * Make the property configurable to allow replacing it
-                 */
-                configurable: true,
+            /**
+             * Replace itself with the resolved dependency
+             * for performance reasons.
+             */
+            Object.defineProperty(this, context.name, {
+                value: instance,
+                writable: false,
+                enumerable: false,
+                configurable: false,
             });
-        });
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return instance as any;
+        };
     };
 }
 
