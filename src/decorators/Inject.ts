@@ -52,7 +52,7 @@ export function Inject<TargetType, DependencyType, PropertyType>(
     ): (
         this: TargetType,
         initialValue: PropertyType | undefined,
-    ) => PropertyType | undefined {
+    ) => PropertyType {
         const _identifier = identifier ?? context.name;
 
         if (_identifier == null && necessary === true)
@@ -73,7 +73,7 @@ export function Inject<TargetType, DependencyType, PropertyType>(
         return function (
             this: TargetType,
             initialValue: PropertyType | undefined,
-        ): PropertyType | undefined {
+        ): PropertyType {
             let instance: DependencyType | PropertyType | undefined;
 
             const dependency: DependencyType | undefined = tryAndCatch(
