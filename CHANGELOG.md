@@ -9,17 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- feat: Add new `IdentifierRequiredError` class for missing identifiers.
+- feat: Add the option to use the decorators without passing the identifier: In this case, the identifier will be the class name (register) or the property name (inject).
 - Add pre release building to release workflow on dev/* branches an version changes.
-
 
 ### Deprecated
 
 
 ### Removed
 
+- feat!: Disable `experimentalDecorators` and `emitDecoratorMetadata` in the `tsconfig.json` file to reflect the change to the stable decorators api.
 
 ### Fixed
 
+- feat!: Update `Register`, `RegisterInstance` and `Inject` decorators to reflect the change to the stable decorators api.
+- feat!: Update `Inject` Decorator typing to reflect the correct property type.
 
 ### Security
 
