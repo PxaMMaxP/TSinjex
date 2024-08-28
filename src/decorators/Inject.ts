@@ -48,9 +48,7 @@ export function Inject<TargetType, DependencyType, PropertyType>(
 ) {
     return function (
         constructor: undefined,
-        context: ClassFieldDecoratorContext<TargetType> & {
-            name: PropertyType;
-        },
+        context: ClassFieldDecoratorContext<TargetType>,
     ): void {
         const _identifier = identifier ?? context.name;
 
