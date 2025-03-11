@@ -1,10 +1,13 @@
 {
   "name": "ts-injex",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple boilerplate code free dependency injection system for TypeScript.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "tsinjex-generate": "./bin/generate-imports.cjs"
+  },
   "scripts": {
     "prepare": "npm run build",
     "build": "npm run build:tsc",
