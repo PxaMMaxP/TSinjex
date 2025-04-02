@@ -9,7 +9,7 @@ import { Identifier } from '../types/Identifier.js';
 import { InitDelegate } from '../types/InitDelegate.js';
 
 /**
- * A decorator to inject a dependency from a DI (Dependency Injection) container into a class property.
+ * A function to inject a dependency from a DI (Dependency Injection) container into a variable.
  * @template T The type of the dependency to be injected.
  * @template U The type of the property to be injected.
  * @param identifier The identifier used to resolve the class in the DI container.
@@ -27,85 +27,47 @@ import { InitDelegate } from '../types/InitDelegate.js';
  * @throws An {@link InitializationError} if an error occurs during the initialization process.
  * @example
  * ```ts
- * class MyClass {
- *   \@Inject<MyDependency>('MyDependencyIdentifier')
- *   private myDependency!: MyDependency;
- * }
+ * let myDependency = inject<MyDependency>('MyDependencyIdentifier');
  * ```
  * @example
  * ```ts
- * class MyClass {
- *   \@Inject('ILogger_', (x: ILogger_) => x.getLogger('Tags'), false)
- *   private _logger?: ILogger;
- * }
+ * let logger = inject<ILogger>('ILogger_', (x: ILogger_) => x.getLogger('Tags'), false);
  * ```
  */
-export function Inject<T, U>(
+export function inject<T, U>(
     identifier: Identifier,
     init?: InitDelegate<T, U> | true,
     isNecessary = true,
-) {
-    return function (target: unknown, propertyKey: string | symbol): void {
-        /**
-         * Function to evaluate the dependency lazily
-         * to avoid circular dependencies, not found dependencies, etc.
-         * @returns The resolved dependency or undefined if the dependency is not found.
-         */
-        const resolve = (): T | undefined => {
-            return TSinjex.getInstance().resolve<T>(identifier, isNecessary);
-        };
+): T | U | undefined {
+    let instance: T | U | undefined;
 
-        Object.defineProperty(target, propertyKey, {
-            get() {
-                let instance: T | U | undefined;
+    const dependency: T | undefined = tryAndCatch(
+        () => TSinjex.getInstance().resolve<T>(identifier, isNecessary),
+        isNecessary,
+        identifier,
+        DependencyResolutionError,
+    );
 
-                const dependency: T | undefined = tryAndCatch(
-                    () => resolve(),
-                    isNecessary,
-                    identifier,
-                    DependencyResolutionError,
-                );
+    if (dependency != null) {
+        const initFunction: (() => U) | undefined =
+            typeof init === 'function' && dependency != null
+                ? (): U => init(dependency)
+                : init === true && hasConstructor(dependency)
+                  ? (): U => new dependency() as U
+                  : undefined;
 
-                if (dependency != null) {
-                    const initFunction: (() => U) | undefined =
-                        typeof init === 'function' && dependency != null
-                            ? (): U => init(dependency)
-                            : init === true && hasConstructor(dependency)
-                              ? (): U => new dependency() as U
-                              : undefined;
+        if (init == null) instance = dependency;
+        else if (initFunction != null)
+            instance = tryAndCatch(
+                initFunction,
+                isNecessary,
+                identifier,
+                InitializationError,
+            );
+        else if (isNecessary) throw new NoInstantiationMethodError(identifier);
+    } else if (isNecessary) throw new DependencyResolutionError(identifier);
 
-                    if (init == null) instance = dependency;
-                    else if (initFunction != null)
-                        instance = tryAndCatch(
-                            initFunction,
-                            isNecessary,
-                            identifier,
-                            InitializationError,
-                        );
-                    else if (isNecessary)
-                        throw new NoInstantiationMethodError(identifier);
-                } else if (isNecessary)
-                    throw new DependencyResolutionError(identifier);
-
-                /**
-                 * Replace itself with the resolved dependency
-                 * for performance reasons.
-                 */
-                Object.defineProperty(this, propertyKey, {
-                    value: instance,
-                    writable: false,
-                    enumerable: false,
-                    configurable: false,
-                });
-
-                return instance;
-            },
-            /**
-             * Make the property configurable to allow replacing it
-             */
-            configurable: true,
-        });
-    };
+    return instance as T | U;
 }
 
 /**

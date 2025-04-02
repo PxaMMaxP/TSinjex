@@ -1,6 +1,6 @@
-import { TSinjex } from '../classes/TSinjex';
-import { DependencyResolutionError } from '../interfaces/Exceptions';
-import { Identifier } from '../types/Identifier';
+import { TSinjex } from '../classes/TSinjex.js';
+import { DependencyResolutionError } from '../interfaces/Exceptions.js';
+import { Identifier } from '../types/Identifier.js';
 
 /**
  * Resolve a dependency.
@@ -15,12 +15,12 @@ export function resolve<T>(identifier: Identifier): T;
  * Resolve a dependency
  * @param identifier The identifier used to register the class in the DI container.
  * @see {@link Identifier} for more information on identifiers.
- * @param necessary The dependency is **not** necessary.
+ * @param isNecessary The dependency is **not** necessary.
  * @returns The resolved dependency or undefined if the dependency is not found.
  */
 export function resolve<T>(
     identifier: Identifier,
-    necessary: false,
+    isNecessary: false,
 ): T | undefined;
 
 /**

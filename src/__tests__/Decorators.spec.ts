@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Inject } from 'src/decorators/Inject';
-import { DependencyResolutionError } from 'src/interfaces/Exceptions';
-import { ForceConstructor } from 'src/types/GenericContructor';
-import { ITSinjex_, ITSinjex } from '../interfaces/ITSinjex';
+import { Inject } from '../decorators/Inject.js';
+import { DependencyResolutionError } from '../interfaces/Exceptions.js';
+import { ITSinjex_, ITSinjex } from '../interfaces/ITSinjex.js';
+import { ForceConstructor } from '../types/GenericContructor.js';
 
 /**
  * Test the Inject decorator.
@@ -282,6 +282,7 @@ export function test_RegisterInstanceDecorator(
     Container: ITSinjex_,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     registerInstance: Function,
+    mode: 'instance' | 'standalone' = 'standalone',
 ): void {
     describe('RegisterInstance Decorator Tests', () => {
         let container: ITSinjex;
@@ -295,7 +296,10 @@ export function test_RegisterInstanceDecorator(
         });
 
         it('should register an instance of a dependency', () => {
-            @registerInstance('InstanceIdentifier')
+            @registerInstance(
+                'InstanceIdentifier',
+                mode === 'instance' ? 'instance' : undefined,
+            )
             class TestClass {
                 private readonly _dependency!: any;
 
@@ -337,7 +341,10 @@ export function test_RegisterInstanceDecorator(
         });
 
         it('should register an instance of a dependency and get it on set', () => {
-            @registerInstance('InstanceIdentifier')
+            @registerInstance(
+                'InstanceIdentifier',
+                mode === 'instance' ? 'instance' : undefined,
+            )
             class TestClass {
                 private readonly _dependency!: any;
 
